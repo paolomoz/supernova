@@ -56,11 +56,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 // Open side panel when the extension action icon is clicked
-chrome.action.onClicked.addListener((tab) => {
-  if (tab.id) {
-    chrome.sidePanel.open({ tabId: tab.id });
-  }
-});
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
 
 // Message routing
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
