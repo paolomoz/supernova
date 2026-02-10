@@ -11,7 +11,8 @@
     "https://*.aem.page/*",
     "https://*.aem.live/*",
     "https://api.anthropic.com/*",
-    "https://ims-na1.adobelogin.com/*"
+    "https://ims-na1.adobelogin.com/*",
+    "https://*.amazonaws.com/*"
   ],
   "background": {
     "service_worker": "src/background/service-worker.ts",

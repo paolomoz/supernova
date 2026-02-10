@@ -4,6 +4,13 @@ export const IMS_TOKEN_ENDPOINT = 'https://ims-na1.adobelogin.com/ims/token/v3';
 export const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 export const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
 
+// AWS Bedrock
+export const BEDROCK_MODEL_ID = 'us.anthropic.claude-sonnet-4-5-20250929-v1:0';
+
+export function getBedrockStreamUrl(region: string, modelId: string): string {
+  return `https://bedrock-runtime.${region}.amazonaws.com/model/${encodeURIComponent(modelId)}/invoke-with-response-stream`;
+}
+
 export function getPreviewUrl(org: string, repo: string, path: string, ref = 'main'): string {
   return `https://${ref}--${repo}--${org}.aem.page${path}`;
 }

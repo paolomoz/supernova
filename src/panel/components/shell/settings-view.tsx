@@ -7,6 +7,10 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ onClose }: SettingsViewProps) {
+  const [useBedrock, setUseBedrock] = useState(false);
+  const [bedrockToken, setBedrockToken] = useState('');
+  const [awsRegion, setAwsRegion] = useState('us-east-1');
+  const [bedrockModelId, setBedrockModelId] = useState('');
   const [anthropicKey, setAnthropicKey] = useState('');
   const [daClientId, setDaClientId] = useState('');
   const [daClientSecret, setDaClientSecret] = useState('');
@@ -18,8 +22,22 @@ export function SettingsView({ onClose }: SettingsViewProps) {
   // Load existing settings
   useEffect(() => {
     chrome.storage.local.get(
-      ['ANTHROPIC_API_KEY', 'DA_CLIENT_ID', 'DA_CLIENT_SECRET', 'DA_SERVICE_TOKEN'],
+      [
+        'USE_BEDROCK',
+        'BEDROCK_TOKEN',
+        'AWS_REGION',
+        'BEDROCK_MODEL_ID',
+        'ANTHROPIC_API_KEY',
+        'DA_CLIENT_ID',
+        'DA_CLIENT_SECRET',
+        'DA_SERVICE_TOKEN',
+      ],
       (data) => {
+        if (data.USE_BEDROCK === true || data.USE_BEDROCK === '1' || data.USE_BEDROCK === 'true')
+          setUseBedrock(true);
+        if (data.BEDROCK_TOKEN) setBedrockToken(data.BEDROCK_TOKEN);
+        if (data.AWS_REGION) setAwsRegion(data.AWS_REGION);
+        if (data.BEDROCK_MODEL_ID) setBedrockModelId(data.BEDROCK_MODEL_ID);
         if (data.ANTHROPIC_API_KEY) setAnthropicKey(data.ANTHROPIC_API_KEY);
         if (data.DA_CLIENT_ID) setDaClientId(data.DA_CLIENT_ID);
         if (data.DA_CLIENT_SECRET) setDaClientSecret(data.DA_CLIENT_SECRET);
@@ -31,6 +49,10 @@ export function SettingsView({ onClose }: SettingsViewProps) {
   const handleSave = async () => {
     setSaving(true);
     await chrome.storage.local.set({
+      USE_BEDROCK: useBedrock ? '1' : '',
+      BEDROCK_TOKEN: bedrockToken,
+      AWS_REGION: awsRegion,
+      BEDROCK_MODEL_ID: bedrockModelId,
       ANTHROPIC_API_KEY: anthropicKey,
       DA_CLIENT_ID: daClientId,
       DA_CLIENT_SECRET: daClientSecret,
@@ -56,19 +78,67 @@ export function SettingsView({ onClose }: SettingsViewProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* AI Configuration */}
         <section className="space-y-3">
-          <h3 className="text-xs font-semibold text-foreground-heading uppercase tracking-wider">AI Configuration</h3>
-          <SettingsField
-            label="Anthropic API Key"
-            value={anthropicKey}
-            onChange={setAnthropicKey}
-            secret={!showSecrets}
-            placeholder="sk-ant-..."
-          />
+          <h3 className="text-xs font-semibold text-foreground-heading uppercase tracking-wider">
+            AI Configuration
+          </h3>
+
+          {/* Bedrock toggle */}
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] font-medium text-muted-foreground">Use AWS Bedrock</label>
+            <button
+              onClick={() => setUseBedrock(!useBedrock)}
+              className={cn(
+                'relative h-5 w-9 rounded-full transition-colors duration-200',
+                useBedrock ? 'bg-primary' : 'bg-border',
+              )}
+            >
+              <span
+                className={cn(
+                  'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white transition-transform duration-200',
+                  useBedrock && 'translate-x-4',
+                )}
+              />
+            </button>
+          </div>
+
+          {useBedrock ? (
+            <>
+              <SettingsField
+                label="ABSK Bearer Token"
+                value={bedrockToken}
+                onChange={setBedrockToken}
+                secret={!showSecrets}
+                placeholder="ABSK..."
+              />
+              <SettingsField
+                label="AWS Region"
+                value={awsRegion}
+                onChange={setAwsRegion}
+                placeholder="us-east-1"
+              />
+              <SettingsField
+                label="Model ID (optional)"
+                value={bedrockModelId}
+                onChange={setBedrockModelId}
+                placeholder="us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+              />
+            </>
+          ) : (
+            <SettingsField
+              label="Anthropic API Key"
+              value={anthropicKey}
+              onChange={setAnthropicKey}
+              secret={!showSecrets}
+              placeholder="sk-ant-..."
+            />
+          )}
         </section>
 
         {/* DA Credentials */}
         <section className="space-y-3">
-          <h3 className="text-xs font-semibold text-foreground-heading uppercase tracking-wider">DA Credentials</h3>
+          <h3 className="text-xs font-semibold text-foreground-heading uppercase tracking-wider">
+            DA Credentials
+          </h3>
           <SettingsField
             label="Client ID"
             value={daClientId}
