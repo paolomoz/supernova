@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Supernova",
+  "version": "0.1.0",
+  "description": "AI-powered AEM assistant for Document Authoring",
+  "permissions": ["sidePanel", "activeTab", "storage"],
+  "host_permissions": [
+    "https://*.da.live/*",
+    "https://admin.da.live/*",
+    "https://admin.hlx.page/*",
+    "https://*.aem.page/*",
+    "https://*.aem.live/*",
+    "https://api.anthropic.com/*",
+    "https://ims-na1.adobelogin.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "src/panel/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.da.live/*"],
+      "js": ["src/content/da-bridge.ts"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Open Supernova"
+  },
+  "icons": {
+    "16": "public/icons/icon-16.png",
+    "48": "public/icons/icon-48.png",
+    "128": "public/icons/icon-128.png"
+  }
+}

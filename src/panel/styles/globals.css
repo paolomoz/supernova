@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Spectrum 2 Light Theme ── */
+
+    /* Backgrounds */
+    --background: 0 0% 97.3%;           /* #F8F8F8 — app frame layer-1 */
+    --background-layer-2: 0 0% 100%;    /* #FFFFFF — elevated surfaces */
+    --foreground: 0 0% 16.1%;           /* #292929 — body text */
+    --foreground-heading: 0 0% 7.5%;    /* #131313 — headings */
+
+    /* Card / Popover (elevated surfaces = layer-2) */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 16.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 16.1%;
+
+    /* Primary — Spectrum blue-900 */
+    --primary: 230 96% 61%;             /* #3B63FB */
+    --primary-foreground: 0 0% 100%;    /* #FFFFFF */
+
+    /* Secondary */
+    --secondary: 0 0% 95.7%;            /* #F4F4F4 */
+    --secondary-foreground: 0 0% 16.1%;
+
+    /* Muted */
+    --muted: 0 0% 95.7%;
+    --muted-foreground: 0 0% 44.3%;     /* #717171 */
+
+    /* Accent */
+    --accent: 0 0% 95.7%;
+    --accent-foreground: 0 0% 16.1%;
+
+    /* Destructive — Spectrum red-800 */
+    --destructive: 4 100% 46%;          /* #EB1000 */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Input */
+    --border: 0 0% 88.2%;              /* #E1E1E1 */
+    --input: 0 0% 88.2%;
+    --ring: 230 96% 61%;               /* focus ring = primary */
+
+    /* Radius — Spectrum 2 defaults */
+    --radius: 0.25rem;                  /* 4px base */
+
+    /* Shadows — Spectrum 2 three-layer system */
+    --shadow-emphasized:
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      0 1px 4px rgba(0, 0, 0, 0.04),
+      0 0px 1px rgba(0, 0, 0, 0.08);
+    --shadow-elevated:
+      0 8px 24px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      0 0px 1px rgba(0, 0, 0, 0.08);
+    --shadow-dragged:
+      0 16px 48px rgba(0, 0, 0, 0.16),
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 0px 1px rgba(0, 0, 0, 0.08);
+
+    /* Semantic status */
+    --positive: 152 69% 31%;            /* green-800 */
+    --positive-foreground: 0 0% 100%;
+    --notice: 30 100% 44%;              /* orange-800 */
+    --notice-foreground: 0 0% 100%;
+    --informative: 230 96% 61%;         /* same as primary */
+    --informative-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    /* ── Spectrum 2 Dark Theme ── */
+    --background: 0 0% 11.4%;           /* #1D1D1D */
+    --background-layer-2: 0 0% 16.1%;   /* #292929 */
+    --foreground: 0 0% 88.2%;           /* #E1E1E1 */
+    --foreground-heading: 0 0% 97.3%;   /* #F8F8F8 */
+
+    --card: 0 0% 16.1%;
+    --card-foreground: 0 0% 88.2%;
+    --popover: 0 0% 16.1%;
+    --popover-foreground: 0 0% 88.2%;
+
+    --primary: 230 96% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 88.2%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 88.2%;
+
+    --destructive: 4 90% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 22.7%;              /* #3A3A3A */
+    --input: 0 0% 22.7%;
+    --ring: 230 96% 65%;
+
+    --shadow-emphasized:
+      0 2px 8px rgba(0, 0, 0, 0.20),
+      0 1px 4px rgba(0, 0, 0, 0.12),
+      0 0px 1px rgba(0, 0, 0, 0.16);
+    --shadow-elevated:
+      0 8px 24px rgba(0, 0, 0, 0.28),
+      0 2px 8px rgba(0, 0, 0, 0.16),
+      0 0px 1px rgba(0, 0, 0, 0.16);
+    --shadow-dragged:
+      0 16px 48px rgba(0, 0, 0, 0.32),
+      0 4px 16px rgba(0, 0, 0, 0.16),
+      0 0px 1px rgba(0, 0, 0, 0.16);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "liga" 1, "calt" 1;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--foreground-heading));
+  }
+
+  /* Focus ring — Spectrum 2: 2px primary with 2px offset */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* AI signature gradient */
+  .ai-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--background)) 0%,
+      hsl(var(--background)) 60%,
+      #8AD5FF 100%
+    );
+  }
+
+  .ai-gradient-vivid {
+    background: linear-gradient(
+      135deg,
+      #8AD5FF 0%,
+      #7A6AFD 40%,
+      #DF4DF5 100%
+    );
+  }
+
+  /* Spectrum 2 shadows as utilities */
+  .shadow-emphasized {
+    box-shadow: var(--shadow-emphasized);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .shadow-dragged {
+    box-shadow: var(--shadow-dragged);
+  }
+}
