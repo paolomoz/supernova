@@ -55,8 +55,22 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-// Open side panel when the extension action icon is clicked
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
+// Configure side panel to open on action icon click
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .then(() => console.log('[Supernova] setPanelBehavior configured'))
+  .catch((e) => console.error('[Supernova] setPanelBehavior failed:', e));
+
+// Fallback: manually open side panel on action click
+// (only fires if setPanelBehavior didn't set openPanelOnActionClick)
+chrome.action.onClicked.addListener(async (tab) => {
+  console.log('[Supernova] action.onClicked fired, tab:', tab.id, 'window:', tab.windowId);
+  try {
+    await chrome.sidePanel.open({ windowId: tab.windowId });
+  } catch (e) {
+    console.error('[Supernova] sidePanel.open failed:', e);
+  }
+});
 
 // Message routing
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
